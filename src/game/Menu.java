@@ -11,6 +11,7 @@ import io.SettingsManager;
 public class Menu {
     private final GameEngine gameEngine = new GameEngine();
     private final SettingsManager settingsManager = new SettingsManager();
+
     private boolean running = true;
 
     public void start() {
@@ -20,6 +21,7 @@ public class Menu {
                     
                     === THE MIST ===
                     """);
+
             showMainMenu();
         }
     }
@@ -65,7 +67,7 @@ public class Menu {
                     break;
                 }
                 default: {
-                    throw new InvalidMenuChoiceException("Please enter a valid number from (1-4).");
+                    throw new InvalidMenuChoiceException("Main Menu", 1, 4, choice);
                 }
             }
         } catch (InvalidMenuChoiceException e) {

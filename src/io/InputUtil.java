@@ -16,12 +16,12 @@ public class InputUtil {
         // Read a whole line to avoid Scanner nextInt/nextLine mixing issues.
         String line = scanner.nextLine();
         if (line == null || line.trim().isEmpty()) {
-            throw new InvalidMenuChoiceException("Please enter a number.");
+            throw new InvalidMenuChoiceException("Please enter a number.", line);
         }
         try {
             return Integer.parseInt(line.trim());
         } catch (NumberFormatException e) {
-            throw new InvalidMenuChoiceException("Please enter a number.");
+            throw new InvalidMenuChoiceException("Please enter a number.", line);
         }
     }
 

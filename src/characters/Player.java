@@ -17,36 +17,6 @@ public class Player {
     private int magic = 0;
     private String name = "Player";
 
-    public int getHp() {
-        return hp;
-    }
-    public int getMaxHp() {
-        return maxHp;
-    }
-    public int getStrength() {
-        return strength;
-    }
-    public int getSpeed() {
-        return speed;
-    }
-    public int getDefense() {
-        return defense;
-    }
-    public int getMagic() {
-        return magic;
-    }
-    public String getName() {
-        return name;
-    }
-    public int getXp() {
-        return xp;
-    }
-    public int getLevel() {
-        return level;
-    }
-    public int addXp(int xp) {
-        return xp + xp;
-    }
     Player() {
     }
 
@@ -81,26 +51,67 @@ public class Player {
             // Read the class choice from the player.
             System.out.print("\n");
             choice = InputUtil.getIntInput();
+            if (choice < 1 || choice > 3) {
+                throw new InvalidMenuChoiceException("Class Selection", 1, 3, choice);
+            }
         } catch (InvalidMenuChoiceException e) {
             System.out.println(e.getMessage());
             return playerCreation();
         }
-        if (choice >= 1 && choice <= 3) {
-            // Apply the chosen class stats to the player.
-            int idx = choice - 1;
-            player.hp = classStats[idx][0];
-            player.maxHp = classStats[idx][0];
-            player.strength = classStats[idx][1];
-            player.defense = classStats[idx][2];
-            player.magic = classStats[idx][3];
-            player.speed = classStats[idx][4];
-        }
+        // Apply the chosen class stats to the player.
+        int idx = choice - 1;
+        player.hp = classStats[idx][0];
+        player.maxHp = classStats[idx][0];
+        player.strength = classStats[idx][1];
+        player.defense = classStats[idx][2];
+        player.magic = classStats[idx][3];
+        player.speed = classStats[idx][4];
         System.out.println("\n" + "------------------------------");
 
         // Show the final player summary after creation.
         System.out.println("Welcome to The Mist, " + player.name + "!" + "\n" + "HP" + player.hp + "/" + player.maxHp + "\n" + "Strength: " + player.strength + "\n" + "Defense: " + player.defense + "\n" + "Magic: " + player.magic + "\n" + "Speed: " + player.speed);
 
         return player;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public int getDefense() {
+        return defense;
+    }
+
+    public int getMagic() {
+        return magic;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public int addXp(int xp) {
+        return xp + xp;
     }
 
 }

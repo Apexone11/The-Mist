@@ -4,7 +4,6 @@
  */
 package game;
 
-import characters.Player;
 import exceptions.InvalidMenuChoiceException;
 import io.InputUtil;
 
@@ -17,6 +16,7 @@ public class GameEngine {
     public void startNewGame() throws InvalidMenuChoiceException {
         // Collect the player name before creating the Player.
         GameState gameState = new GameState();
+
     }
 
     public void runGameLoop() {
@@ -47,7 +47,7 @@ public class GameEngine {
                         break;
                     }
                     case (2): {
-                        // Placeholder for character sheet.
+                        // Placeholder for a character sheet.
                         System.out.println("\n" + "Character sheet coming Week 3");
                         break;
                     }
@@ -66,7 +66,7 @@ public class GameEngine {
                         break;
                     }
                     default: {
-                        throw new InvalidMenuChoiceException("Please enter a valid number from (1-5).");
+                        throw new InvalidMenuChoiceException("In-Game Menu", 1, 5, choice);
                     }
                 }
             } catch (InvalidMenuChoiceException e) {

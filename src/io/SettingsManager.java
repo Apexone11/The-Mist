@@ -71,7 +71,7 @@ public class SettingsManager {
                     difficulty = "Hard";
                     writeFile();
                 } else {
-                    throw new InvalidMenuChoiceException("Please enter a valid number from (1-3).");
+                    throw new InvalidMenuChoiceException("Difficulty Settings", 1, 3, difficultyChoice);
                 }
             } catch (InvalidMenuChoiceException e) {
                 System.out.println(e.getMessage());
@@ -94,7 +94,7 @@ public class SettingsManager {
                     showCombatLog = false;
                     writeFile();
                 } else {
-                    throw new InvalidMenuChoiceException("Please enter a valid number from (1-2).");
+                    throw new InvalidMenuChoiceException("Show Combat Log", 1, 2, showCombatLogChoice);
                 }
             } catch (InvalidMenuChoiceException e) {
                 System.out.println(e.getMessage());
@@ -120,7 +120,44 @@ public class SettingsManager {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(SETTINGS_FILE_PATH.toFile()))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                System.out.println("\n" + line);
+                String trimmed = line.trim();
+                if (trimmed.isEmpty()) {
+                    continue;
+                }
+
+                String difficultyValue = null;
+                String showCombatLogValue = null;
+
+                int diffKeyIndex = trimmed.indexOf("\"difficulty\"");
+                if (diffKeyIndex >= 0) {
+                    int colon = trimmed.indexOf(":", diffKeyIndex);
+                    int firstQuote = trimmed.indexOf("\"", colon + 1);
+                    int secondQuote = trimmed.indexOf("\"", firstQuote + 1);
+                    if (firstQuote >= 0 && secondQuote > firstQuote) {
+                        difficultyValue = trimmed.substring(firstQuote + 1, secondQuote);
+                    }
+                }
+
+                int showCombatLogKeyIndex = trimmed.indexOf("\"showCombatLog\"");
+                if (showCombatLogKeyIndex >= 0) {
+                    int colon = trimmed.indexOf(":", showCombatLogKeyIndex);
+                    int comma = trimmed.indexOf(",", colon + 1);
+                    int brace = trimmed.indexOf("}", colon + 1);
+                    int valueEnd = (comma >= 0) ? comma : brace;
+                    if (colon >= 0 && valueEnd > colon) {
+                        showCombatLogValue = trimmed.substring(colon + 1, valueEnd).trim();
+                    }
+                }
+
+                if (difficultyValue != null) {
+                    System.out.println("\n" + "difficulty: " + difficultyValue);
+                }
+                if (showCombatLogValue != null) {
+                    System.out.println("showCombatLog: " + showCombatLogValue);
+                }
+                if (difficultyValue == null && showCombatLogValue == null) {
+                    System.out.println("\n" + line);
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -131,7 +168,7 @@ public class SettingsManager {
 
         System.out.println("Writing to file...");
         try (BufferedWriter b = new BufferedWriter(new FileWriter(SETTINGS_FILE_PATH.toFile()))) {
-            String settings = "Difficulty: " + difficulty + "\n" + "Show Combat Log: " + showCombatLog;
+            String settings = "{\"difficulty\":\"" + difficulty + "\",\"showCombatLog\":" + showCombatLog + "}";
             b.write(settings);
             b.newLine();
         } catch (IOException e) {
