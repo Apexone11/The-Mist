@@ -24,7 +24,7 @@ public class Player {
         // Create a fresh player instance to populate with input.
         Player player = new Player();
 
-        System.out.println("Player creation");
+        System.out.println("\n" + "Player creation");
 
         // Capture the player's name.
         System.out.print("\n" + "Enter players name: ");

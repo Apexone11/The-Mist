@@ -15,11 +15,10 @@ public class GameEngine {
 
     public void startNewGame() throws InvalidMenuChoiceException {
         // Collect the player name before creating the Player.
-        GameState gameState = new GameState();
-
+        GameState.playerCreation();
     }
 
-    public void runGameLoop() {
+    public static void runGameLoop() {
         boolean inGame = true;
         int choice;
 

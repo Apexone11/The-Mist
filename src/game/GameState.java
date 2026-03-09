@@ -4,8 +4,9 @@ import characters.Player;
 import exceptions.InvalidMenuChoiceException;
 
 public class GameState {
-
-    GameState() throws InvalidMenuChoiceException {
-        Player player = Player.playerCreation();
+    private GameState(){
     }
+     public static void playerCreation() throws InvalidMenuChoiceException {
+        Player player = Player.playerCreation();
+     }
 }
