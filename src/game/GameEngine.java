@@ -14,12 +14,9 @@ public class GameEngine {
 
     }
 
-    public void startNewGame() {
+    public void startNewGame() throws InvalidMenuChoiceException {
         // Collect the player name before creating the Player.
-        System.out.print("\n" + "Enter players name: ");
-        String name = InputUtil.getStringInput();
-        Player player = new Player(name);
-
+        GameState gameState = new GameState();
     }
 
     public void runGameLoop() {

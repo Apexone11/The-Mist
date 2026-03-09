@@ -11,27 +11,30 @@
 
 ## 📖 About
 
-**The Mist** is a console-based role-playing game where players explore a fog-shrouded world, battle monsters and bosses, manage an inventory of weapons and potions, and fight to survive. Built from the ground up in Java as a semester-long project, each week introduces new features — from combat and exploration to save/load systems and a full settings menu.
+**The Mist** is a console-based role-playing game where players explore a fog-shrouded world, battle monsters and
+bosses, manage an inventory of weapons and potions, and fight to survive. Built from the ground up in Java as a
+semester-long project, each week introduces new features — from combat and exploration to save/load systems and a full
+settings menu.
 
 ---
 
 ## ✨ Features
 
-| Feature | Status |
-|---|---|
-| Main menu (Start, Load, Settings, Quit) | ✅ Complete |
-| Player creation | ✅ Complete |
-| In-game menu loop | ✅ Complete |
-| Custom exception handling | ✅ Complete |
-| Input validation utilities | ✅ Complete |
+| Feature                                  | Status         |
+|------------------------------------------|----------------|
+| Main menu (Start, Load, Settings, Quit)  | ✅ Complete     |
+| Player creation                          | ✅ Complete     |
+| In-game menu loop                        | ✅ Complete     |
+| Custom exception handling                | ✅ Complete     |
+| Input validation utilities               | ✅ Complete     |
 | Character system (Player, Monster, Boss) | 🔧 In Progress |
-| World map & room exploration | 🔧 In Progress |
-| Combat engine with AI controller | 🔧 In Progress |
-| Item system (Weapons & Potions) | 🔧 In Progress |
-| Inventory management | 🔧 In Progress |
-| Save / Load system | 🔧 In Progress |
-| Settings manager | 🔧 In Progress |
-| Weighted random loot drops | 🔧 In Progress |
+| World map & room exploration             | 🔧 In Progress |
+| Combat engine with AI controller         | 🔧 In Progress |
+| Item system (Weapons & Potions)          | 🔧 In Progress |
+| Inventory management                     | 🔧 In Progress |
+| Save / Load system                       | 🔧 In Progress |
+| Settings manager                         | 🔧 In Progress |
+| Weighted random loot drops               | 🔧 In Progress |
 
 ---
 
@@ -97,12 +100,12 @@ The Mist/
    ```
 
 2. **Open in IntelliJ IDEA**
-   - File → Open → select the project folder
-   - Wait for indexing to complete
+    - File → Open → select the project folder
+    - Wait for indexing to complete
 
 3. **Run the game**
-   - Navigate to `src/main/main.java`
-   - Click the green **Run** button or press `Shift+F10`
+    - Navigate to `src/main/main.java`
+    - Click the green **Run** button or press `Shift+F10`
 
 ---
 
@@ -110,20 +113,20 @@ The Mist/
 
 The project follows a weekly delivery schedule. Here's the plan:
 
-| Week | Milestone |
-|------|-----------|
-| 1 | Project setup, main menu, game loop skeleton |
-| 2 | Player creation, custom exceptions, input validation |
-| 3 | Character sheet, Player stats |
-| 4 | World map, room exploration |
-| 5 | Combat engine, monster encounters |
-| 6 | Boss fights, AI controller |
-| 7 | Item system — weapons & potions |
-| 8 | Inventory management |
-| 9 | Save / Load system |
-| 10 | Settings manager |
-| 11 | Weighted loot drops, balancing |
-| 12 | Polish, JavaDoc, final submission |
+| Week | Milestone                                            |
+|------|------------------------------------------------------|
+| 1    | Project setup, main menu, game loop skeleton         |
+| 2    | Player creation, custom exceptions, input validation |
+| 3    | Character sheet, Player stats                        |
+| 4    | World map, room exploration                          |
+| 5    | Combat engine, monster encounters                    |
+| 6    | Boss fights, AI controller                           |
+| 7    | Item system — weapons & potions                      |
+| 8    | Inventory management                                 |
+| 9    | Save / Load system                                   |
+| 10   | Settings manager                                     |
+| 11   | Weighted loot drops, balancing                       |
+| 12   | Polish, JavaDoc, final submission                    |
 
 ---
 
@@ -139,6 +142,7 @@ The project follows a weekly delivery schedule. Here's the plan:
 ## 👤 Author
 
 **Abdul Rahman Fornah**
+
 - Email: aforna1@umbc.edu
 - University of Maryland, Baltimore County (UMBC)
 

@@ -6,9 +6,11 @@ package game;
 
 import exceptions.InvalidMenuChoiceException;
 import io.InputUtil;
+import io.SettingsManager;
 
 public class Menu {
     private final GameEngine gameEngine = new GameEngine();
+    private final SettingsManager settingsManager = new SettingsManager();
     private boolean running = true;
 
     public void start() {
@@ -54,6 +56,7 @@ public class Menu {
                 }
                 case (3): {
                     System.out.println("\n" + "Settings");
+                    SettingsManager.setting();
                     break;
                 }
                 case (4): {
