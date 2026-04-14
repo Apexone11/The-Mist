@@ -1,13 +1,11 @@
 package characters;
 
 import exceptions.InvalidMenuChoiceException;
+import inventory.Inventory;
 import io.InputUtil;
+import items.Potion;
 
 public class Player {
-    // Persistent player progression values.
-    private final int xp = 0;
-    private final int level = 1;
-
     // Per-player stats (instance fields, not shared across players).
     private int hp = 100;
     private int maxHp = 100;
@@ -16,8 +14,12 @@ public class Player {
     private int defense = 0;
     private int magic = 0;
     private String name = "Player";
+    private int xp = 0;
+    private int level = 1;
+    private Inventory inventory;
 
-    Player() {
+    public Player() {
+        this.inventory = new Inventory();
     }
 
     public static Player playerCreation() throws InvalidMenuChoiceException {
@@ -66,6 +68,11 @@ public class Player {
         player.defense = classStats[idx][2];
         player.magic = classStats[idx][3];
         player.speed = classStats[idx][4];
+
+        // Add starter potions
+        player.getInventory().addItem(new Potion("Health Potion", "Restores 30 HP", 30));
+        player.getInventory().addItem(new Potion("Health Potion", "Restores 30 HP", 30));
+
         System.out.println("\n" + "------------------------------");
 
         // Show the final player summary after creation.
@@ -110,8 +117,49 @@ public class Player {
         return level;
     }
 
-    public int addXp(int xp) {
-        return xp + xp;
+    public Inventory getInventory() {
+        return inventory;
     }
 
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
+    }
+
+    public void setStrength(int strength) {
+        this.strength = strength;
+    }
+
+    public void setDefense(int defense) {
+        this.defense = defense;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setXp(int xp) {
+        this.xp = xp;
+    }
+
+    public void addXp(int amount) {
+        this.xp += amount;
+        if (this.xp >= level * 100) {
+            levelUp();
+        }
+    }
+
+    private void levelUp() {
+        level++;
+        xp = 0;
+        maxHp += 10;
+        hp = maxHp;
+        strength += 2;
+        defense += 2;
+        System.out.println("\nLEVEL UP! You are now level " + level);
+        System.out.println("HP: " + hp + " | STR: " + strength + " | DEF: " + defense);
+    }
 }

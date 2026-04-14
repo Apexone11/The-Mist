@@ -1,0 +1,215 @@
+{
+  "startRoom": "R1",
+  "rooms": [
+    {
+      "id": "R1",
+      "name": "The Waking Shore",
+      "description": "You wake up on a cold, grey beach. The Mist clings to the ground like a living thing. Behind you, the infinite sea; ahead, the jagged cliffs of Oakhaven. Your journey to the heart of the Mist begins here.",
+      "neighbors": { "N": "R2" },
+      "encounterRate": 0.0
+    },
+    {
+      "id": "R2",
+      "name": "Cliffside Path",
+      "description": "A narrow path winding up the cliffs. The wind howls, carrying distant, unnatural screams. You see the ruins of a watchtower above.",
+      "neighbors": { "S": "R1", "N": "R3" },
+      "encounterRate": 0.1
+    },
+    {
+      "id": "R3",
+      "name": "The Broken Watchtower",
+      "description": "Once a beacon of hope, now a hollowed shell. Rotting wood and rusted iron litter the floor. You find a discarded map showing the way to the Whispering Woods.",
+      "neighbors": { "S": "R2", "E": "R4" },
+      "encounterRate": 0.3
+    },
+    {
+      "id": "R4",
+      "name": "The Whispering Woods - Entrance",
+      "description": "The trees here lean toward you, their leaves rustling even when there is no wind. The air tastes like copper.",
+      "neighbors": { "W": "R3", "N": "R5", "E": "R10" },
+      "encounterRate": 0.4
+    },
+    {
+      "id": "R5",
+      "name": "Gloom Hollow",
+      "description": "A low-lying part of the forest where the Mist is particularly thick. Glowing mushrooms provide the only light.",
+      "neighbors": { "S": "R4", "N": "R6" },
+      "encounterRate": 0.5
+    },
+    {
+      "id": "R6",
+      "name": "The Hunter's Camp",
+      "description": "An abandoned camp. A fire still smolders, but there is no sign of the hunter. Only a bloody scrap of leather remains.",
+      "neighbors": { "S": "R5", "W": "R7" },
+      "encounterRate": 0.2
+    },
+    {
+      "id": "R7",
+      "name": "The Silent Clearing",
+      "description": "A circle of white trees. Not a single bird sings here. In the center, a stone altar stained with time.",
+      "neighbors": { "E": "R6", "W": "R8" },
+      "encounterRate": 0.6
+    },
+    {
+      "id": "R8",
+      "name": "Spider's Web",
+      "description": "Massive webs span between the trees. You can feel eyes watching you from the canopy.",
+      "neighbors": { "E": "R7", "N": "R9" },
+      "encounterRate": 0.8
+    },
+    {
+      "id": "R9",
+      "name": "The Weaver's Lair",
+      "description": "The heart of the spider infestation. The Mist is sticky here. Something big moves in the shadows.",
+      "neighbors": { "S": "R8" },
+      "encounterRate": 1.0
+    },
+    {
+      "id": "R10",
+      "name": "Eastwood Trail",
+      "description": "A well-trodden path heading east towards the ruins of Oakhaven City.",
+      "neighbors": { "W": "R4", "E": "R11" },
+      "encounterRate": 0.3
+    },
+    {
+      "id": "R11",
+      "name": "The City Gates",
+      "description": "The massive iron gates of Oakhaven lie off their hinges. Beyond them, a city of ghosts.",
+      "neighbors": { "W": "R10", "N": "R12" },
+      "encounterRate": 0.5
+    },
+    {
+      "id": "R12",
+      "name": "Market Square",
+      "description": "The center of the city. Overturned stalls and broken glass crunch underfoot. A fountain in the center weeps black ichor.",
+      "neighbors": { "S": "R11", "N": "R13", "E": "R15", "W": "R17" },
+      "encounterRate": 0.6
+    },
+    {
+      "id": "R13",
+      "name": "The Cathedral of Light",
+      "description": "A massive structure that once represented the city's faith. Now, its stained glass is shattered, and the Mist flows through its halls like a river.",
+      "neighbors": { "S": "R12", "N": "R14" },
+      "encounterRate": 0.7
+    },
+    {
+      "id": "R14",
+      "name": "The High Altar",
+      "description": "The most sacred part of the Cathedral. A fallen angel's statue lies headless on the floor.",
+      "neighbors": { "S": "R13" },
+      "encounterRate": 0.9
+    },
+    {
+      "id": "R15",
+      "name": "Merchant's Row",
+      "description": "The wealthy district. The houses here are grand but hollow. You can hear the faint sound of gold coins clinking.",
+      "neighbors": { "W": "R12", "E": "R16" },
+      "encounterRate": 0.5
+    },
+    {
+      "id": "R16",
+      "name": "The Vaulted Cellar",
+      "description": "A hidden cellar beneath a merchant's house. The air is stale and smells of old wine and secrets.",
+      "neighbors": { "W": "R15" },
+      "encounterRate": 0.8
+    },
+    {
+      "id": "R17",
+      "name": "The Slums",
+      "description": "The poorest part of Oakhaven. The buildings are leaning precariously, held together by rot and the Mist.",
+      "neighbors": { "E": "R12", "W": "R18" },
+      "encounterRate": 0.7
+    },
+    {
+      "id": "R18",
+      "name": "The Blackened Alley",
+      "description": "A dark, narrow passage where the Mist seems to actively avoid the shadows. You feel a cold draft from the ground.",
+      "neighbors": { "E": "R17", "S": "R19" },
+      "encounterRate": 0.6
+    },
+    {
+      "id": "R19",
+      "name": "Entrance to the Sewers",
+      "description": "A heavy iron grate leads down into the darkness. The smell is unbearable.",
+      "neighbors": { "N": "R18", "D": "R20" },
+      "encounterRate": 0.4
+    },
+    {
+      "id": "R20",
+      "name": "The Drenched Tunnels",
+      "description": "Knee-deep in foul water. The echoes of your footsteps are answered by something splashing nearby.",
+      "neighbors": { "U": "R19", "E": "R21" },
+      "encounterRate": 0.7
+    },
+    {
+      "id": "R21",
+      "name": "The Great Cistern",
+      "description": "A massive underground chamber. The water here is perfectly still, reflecting a sky that shouldn't exist.",
+      "neighbors": { "W": "R20", "E": "R22" },
+      "encounterRate": 0.8
+    },
+    {
+      "id": "R22",
+      "name": "The Alchemist's Lab",
+      "description": "A secret workshop hidden in the sewers. Beakers and scrolls are scattered everywhere. You find a recipe for a 'Mist-Walker's Draught'.",
+      "neighbors": { "W": "R21", "N": "R23" },
+      "encounterRate": 0.5
+    },
+    {
+      "id": "R23",
+      "name": "The Sunken Library",
+      "description": "Bookshelves line the walls, but most of the knowledge has been lost to the water. One book remains dry on a high pedestal.",
+      "neighbors": { "S": "R22", "E": "R24" },
+      "encounterRate": 0.6
+    },
+    {
+      "id": "R24",
+      "name": "The Forgotten Bridge",
+      "description": "An ancient stone bridge crossing an underground river. The bridge looks like it might collapse at any moment.",
+      "neighbors": { "W": "R23", "N": "R25" },
+      "encounterRate": 0.7
+    },
+    {
+      "id": "R25",
+      "name": "The Crypt of Ancestors",
+      "description": "The final resting place of the Oakhaven founders. The sarcophagi are open, their inhabitants long gone.",
+      "neighbors": { "S": "R24", "N": "R26" },
+      "encounterRate": 0.9
+    },
+    {
+      "id": "R26",
+      "name": "The Gate of Souls",
+      "description": "A massive stone portal glowing with a faint blue light. Beyond it lies the Castle of the Mist Lord.",
+      "neighbors": { "S": "R25", "N": "R27" },
+      "encounterRate": 0.3
+    },
+    {
+      "id": "R27",
+      "name": "The Castle Courtyard",
+      "description": "The Mist is so thick here you can barely see your own hands. The castle towers loom above like giants.",
+      "neighbors": { "S": "R26", "N": "R28" },
+      "encounterRate": 0.8
+    },
+    {
+      "id": "R28",
+      "name": "The Grand Staircase",
+      "description": "Red carpet, now grey with dust, leads up to the throne room. Armor stands line the walls, their visors empty.",
+      "neighbors": { "S": "R27", "U": "R29" },
+      "encounterRate": 0.9
+    },
+    {
+      "id": "R29",
+      "name": "The Throne Room",
+      "description": "The heart of the castle. A figure sits on a throne made of twisted shadow. The Mist Lord awaits you.",
+      "neighbors": { "D": "R28", "N": "R30" },
+      "encounterRate": 1.0
+    },
+    {
+      "id": "R30",
+      "name": "The Void Beyond",
+      "description": "Behind the throne, a rift in reality. This is where the Mist comes from. You have reached the end of the world.",
+      "neighbors": { "S": "R29" },
+      "encounterRate": 0.0
+    }
+  ]
+}

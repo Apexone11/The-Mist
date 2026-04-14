@@ -48,11 +48,10 @@ public class Menu {
                 case (1): {
                     gameEngine.startNewGame();
                     pressEnterToContinue();
-                    gameEngine.runGameLoop();
                     break;
                 }
                 case (2): {
-                    System.out.println("\n" + "Loading Game");
+                    gameEngine.loadExistingGame();
                     pressEnterToContinue();
                     break;
                 }
