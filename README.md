@@ -27,14 +27,14 @@ settings menu.
 | In-game menu loop                        | ✅ Complete     |
 | Custom exception handling                | ✅ Complete     |
 | Input validation utilities               | ✅ Complete     |
-| Character system (Player, Monster, Boss) | 🔧 In Progress |
-| World map & room exploration             | 🔧 In Progress |
-| Combat engine with AI controller         | 🔧 In Progress |
-| Item system (Weapons & Potions)          | 🔧 In Progress |
-| Inventory management                     | 🔧 In Progress |
-| Save / Load system                       | 🔧 In Progress |
-| Settings manager                         | 🔧 In Progress |
-| Weighted random loot drops               | 🔧 In Progress |
+| Character system (Player, Monster, Boss) | ✅ Complete     |
+| World map & room exploration             | ✅ Complete     |
+| Combat engine with AI controller         | ✅ Complete     |
+| Item system (Weapons & Potions)          | ✅ Complete     |
+| Inventory management                     | ✅ Complete     |
+| Save / Load system                       | ✅ Complete     |
+| Settings manager                         | ✅ Complete     |
+| Weighted random loot drops               | ✅ Complete     |
 
 ---
 
@@ -95,8 +95,8 @@ The Mist/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/the-mist.git
-   cd the-mist
+   git clone https://github.com/Apexone11/The-Mist.git
+   cd The-Mist
    ```
 
 2. **Open in IntelliJ IDEA**
@@ -134,8 +134,8 @@ The project follows a weekly delivery schedule. Here's the plan:
 
 - **Language:** Java 21
 - **IDE:** IntelliJ IDEA
-- **Data format:** JSON (`rooms.json`)
-- **Libraries:** JetBrains Annotations
+- **Data format:** JSON (`rooms.json`, `settings.json`)
+- **Libraries:** Gson 2.11.0, JetBrains Annotations
 
 ---
 
