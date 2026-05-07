@@ -4,7 +4,9 @@
  */
 package game;
 
+import characters.Dialogue;
 import characters.Monster;
+import characters.NPC;
 import characters.Player;
 import combat.CombatEngine;
 import exceptions.InvalidMenuChoiceException;
@@ -12,50 +14,64 @@ import inventory.Inventory;
 import io.InputUtil;
 import items.Item;
 import items.Potion;
+import util.ConsoleUI;
 import world.Room;
 import world.WorldMap;
 import util.RandomUtil;
 import util.WeightedBag;
 import java.io.FileNotFoundException;
+import java.util.List;
 
+/**
+ * The core engine of the game. Manages the main game loop, movement, combat, and interactions.
+ */
 public class GameEngine {
 
     private GameState gameState;
 
+    /**
+     * Initializes a new GameEngine with an empty GameState.
+     */
     public GameEngine() {
         this.gameState = new GameState();
     }
 
+    /**
+     * Starts a new game by loading the map, initiating player creation, and entering the game loop.
+     * @throws InvalidMenuChoiceException if an invalid choice is made during player creation
+     */
     public void startNewGame() throws InvalidMenuChoiceException {
         WorldMap worldMap = new WorldMap();
         try {
             worldMap.loadMap("data/rooms.json");
             gameState.setWorldMap(worldMap);
             gameState.setCurrentRoom(worldMap.getRoom(worldMap.getStartRoomId()));
-            System.out.println("Map loaded successfully!");
+            ConsoleUI.printBox("The Mist gathers as you step into the unknown...");
         } catch (FileNotFoundException e) {
             System.out.println("Error: rooms.json not found!");
             return;
         }
 
-        // Collect the player name before creating the Player.
         GameState.playerCreation(gameState);
         
         displayRoom(gameState.getCurrentRoom());
         runGameLoop();
     }
 
+    /**
+     * Loads an existing game from a save file.
+     */
     public void loadExistingGame() {
         WorldMap worldMap = new WorldMap();
         try {
             worldMap.loadMap("data/rooms.json");
             GameState loadedState = io.SaveManager.loadGame(worldMap);
             if (loadedState == null || loadedState.getPlayer() == null) {
-                System.out.println("Error: No valid save game found.");
+                ConsoleUI.printBox("Error: No valid save game found.");
                 return;
             }
             this.gameState = loadedState;
-            System.out.println("Game loaded successfully!");
+            ConsoleUI.printBox("The mists part as you return to Oakhaven...");
             displayRoom(gameState.getCurrentRoom());
             runGameLoop();
         } catch (FileNotFoundException e) {
@@ -63,65 +79,60 @@ public class GameEngine {
         }
     }
 
+    /**
+     * The main loop of the game where the player can choose various actions like exploring, talking, or checking their journal.
+     */
     public void runGameLoop() {
         boolean inGame = true;
         int choice;
 
         while (inGame) {
-            // In-game menu loop.
+            ConsoleUI.printHeader("Main Menu");
             System.out.println("""
-                    
-                    1)  Explore / Move
-                    
-                    2)  Character Sheet
-                    
-                    3)  Inventory
-                    
-                    4)  Save
-                    
-                    5)  Quit to Main Menu
+                    [1]  Explore / Move
+                    [2]  Talk to Residents
+                    [3]  Journal / Quests
+                    [4]  Character Sheet
+                    [5]  Inventory / Equipment
+                    [6]  Save Progress
+                    [7]  Exit to Main Menu
                     """);
+            ConsoleUI.printDivider();
 
             try {
+                System.out.print("Select action: ");
                 choice = InputUtil.getIntInput();
                 switch (choice) {
                     case (1): {
-                        System.out.println("Enter direction (N/S/E/W): ");
-                        String direction = InputUtil.getStringInput().trim().toUpperCase();
-
-                        Room currentRoom = gameState.getCurrentRoom();
-                        if(currentRoom.hasNeighbor(direction)){
-                            String nextRoomId = currentRoom.getNeighborId(direction);
-                            Room nextRoom = gameState.getWorldMap().getRoom(nextRoomId);
-                            gameState.setCurrentRoom(nextRoom);
-                            System.out.println("\n" + "You moved " + direction);
-                            displayRoom(nextRoom);
-                            checkEncounter(nextRoom);
-                            checkLoot();
-                        }
-                        else {
-                            System.out.println("\n" + "You cannot move that way.");
-                        }
+                        handleMovement();
                         break;
                     }
                     case (2): {
-                        displayCharacterSheet();
+                        handleDialogue();
                         break;
                     }
                     case (3): {
-                        useItem();
+                        displayJournal();
                         break;
                     }
                     case (4): {
-                        io.SaveManager.saveGame(gameState);
+                        displayCharacterSheet();
                         break;
                     }
                     case (5): {
+                        useItem();
+                        break;
+                    }
+                    case (6): {
+                        io.SaveManager.saveGame(gameState);
+                        break;
+                    }
+                    case (7): {
                         inGame = false;
                         break;
                     }
                     default: {
-                        throw new InvalidMenuChoiceException("In-Game Menu", 1, 5, choice);
+                        throw new InvalidMenuChoiceException("Action Menu", 1, 7, choice);
                     }
                 }
             } catch (InvalidMenuChoiceException e) {
@@ -130,17 +141,157 @@ public class GameEngine {
         }
     }
 
-    private void displayRoom(Room room) {
-        System.out.println("==============================");
-        System.out.println("  " + room.getName());
-        System.out.println("==============================");
-        System.out.println(room.getDescription());
-        System.out.println();
+    /**
+     * Displays the quest journal, showing active and completed quests.
+     */
+    private void displayJournal() {
+        characters.QuestLog log = gameState.getPlayer().getQuestLog();
+        ConsoleUI.printHeader("Journal");
+        System.out.println("  ACTIVE QUESTS:");
+        if (log.getActiveQuests().isEmpty()) System.out.println("  - None");
+        for (String q : log.getActiveQuests()) System.out.println("  - " + q);
         
-        String exits = String.join(", ", room.getNeighbors().keySet());
-        System.out.println("Exits: " + exits);
+        System.out.println("\n  COMPLETED QUESTS:");
+        if (log.getCompletedQuests().isEmpty()) System.out.println("  - None");
+        for (String q : log.getCompletedQuests()) System.out.println("  - " + q);
+        
+        ConsoleUI.printDivider();
+        System.out.println("\n  [Press Enter to return]");
+        InputUtil.waitForEnter();
     }
 
+    /**
+     * Handles player movement between rooms based on user input.
+     */
+    private void handleMovement() {
+        System.out.println("Move where? (N/S/E/W/U/D): ");
+        String direction = InputUtil.getStringInput().trim().toUpperCase();
+
+        Room currentRoom = gameState.getCurrentRoom();
+        if (currentRoom.hasNeighbor(direction)) {
+            String nextRoomId = currentRoom.getNeighborId(direction);
+            Room nextRoom = gameState.getWorldMap().getRoom(nextRoomId);
+            gameState.setCurrentRoom(nextRoom);
+            ConsoleUI.printBox("You traveled " + direction);
+            displayRoom(nextRoom);
+            checkEncounter(nextRoom);
+            checkLoot();
+        } else {
+            System.out.println("\n[!] You cannot move that way.");
+        }
+    }
+
+    /**
+     * Handles the selection of an NPC to talk to in the current room.
+     */
+    private void handleDialogue() {
+        Room currentRoom = gameState.getCurrentRoom();
+        List<NPC> npcs = currentRoom.getNpcs();
+        if (npcs.isEmpty()) {
+            System.out.println("No one here but the Mist.");
+            return;
+        }
+
+        System.out.println("\nWho do you want to talk to?");
+        for (int i = 0; i < npcs.size(); i++) {
+            System.out.println((i + 1) + ") " + npcs.get(i).getName());
+        }
+        System.out.println("0) Back");
+
+        try {
+            int choice = InputUtil.getIntInput();
+            if (choice == 0) return;
+            if (choice > 0 && choice <= npcs.size()) {
+                startDialogue(npcs.get(choice - 1));
+            }
+        } catch (InvalidMenuChoiceException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Starts a branching dialogue with the specified NPC.
+     * @param npc the NPC to interact with
+     */
+    private void startDialogue(NPC npc) {
+        Dialogue currentDialogue = npc.getDialogue(npc.getStartDialogueId());
+        while (currentDialogue != null) {
+            ConsoleUI.printHeader(npc.getName());
+            ConsoleUI.printBox(currentDialogue.getText());
+
+            List<Dialogue.Choice> choices = currentDialogue.getChoices();
+            if (choices.isEmpty()) {
+                System.out.println("\n[Press Enter to end conversation]");
+                InputUtil.waitForEnter();
+                break;
+            }
+
+            for (int i = 0; i < choices.size(); i++) {
+                System.out.println((i + 1) + ") " + choices.get(i).getText());
+            }
+
+            try {
+                int choiceIdx = InputUtil.getIntInput();
+                if (choiceIdx > 0 && choiceIdx <= choices.size()) {
+                    Dialogue.Choice selectedChoice = choices.get(choiceIdx - 1);
+                    applyEffect(selectedChoice.getEffect());
+                    currentDialogue = npc.getDialogue(selectedChoice.getNextDialogueId());
+                }
+            } catch (InvalidMenuChoiceException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Applies a narrative effect from a dialogue choice, such as increasing a stat or starting a quest.
+     * @param effect the effect string to parse and apply
+     */
+    private void applyEffect(String effect) {
+        if (effect == null) return;
+        Player player = gameState.getPlayer();
+        if (effect.startsWith("ADD_STRENGTH:")) {
+            int val = Integer.parseInt(effect.split(":")[1]);
+            player.setStrength(player.getStrength() + val);
+            ConsoleUI.printBox("You feel a surge of power! Strength +" + val);
+        } else if (effect.startsWith("ADD_MAGIC:")) {
+            int val = Integer.parseInt(effect.split(":")[1]);
+            player.setMagic(player.getMagic() + val);
+            player.learnSkill(new characters.Skill("Mist Blast", "A blast of pure condensed mist.", 15, 0, "DAMAGE"));
+            ConsoleUI.printBox("Your inner spark glows brighter! Magic enhanced. Learned 'Mist Blast'!");
+        } else if (effect.startsWith("QUEST_ADD:")) {
+            String quest = effect.split(":")[1];
+            player.getQuestLog().addQuest(quest);
+            ConsoleUI.printBox("New Quest: " + quest);
+        } else if (effect.startsWith("LEARN_SKILL:")) {
+            String[] parts = effect.split(":");
+            player.learnSkill(new characters.Skill(parts[1], parts[2], Integer.parseInt(parts[3]), 0, parts[4]));
+            ConsoleUI.printBox("Learned Skill: " + parts[1]);
+        }
+    }
+
+    /**
+     * Displays information about the specified room.
+     * @param room the room to display
+     */
+    private void displayRoom(Room room) {
+        ConsoleUI.printHeader(room.getName());
+        ConsoleUI.printBox(room.getDescription());
+        
+        System.out.println("  Exits: " + String.join(", ", room.getNeighbors().keySet()));
+        if (!room.getNpcs().isEmpty()) {
+            System.out.print("  Inhabitants: ");
+            for (NPC npc : room.getNpcs()) {
+                System.out.print(npc.getName() + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    /**
+     * Checks for a random monster encounter in the specified room.
+     * @param room the room to check for encounters
+     */
     private void checkEncounter(Room room) {
         double roll = RandomUtil.randomDouble();
 
@@ -152,6 +303,10 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Spawns a random monster based on the player's current room/progression.
+     * @return a new Monster instance
+     */
     private Monster spawnMonster() {
         String roomId = gameState.getCurrentRoom().getId();
         int roomNum = Integer.parseInt(roomId.substring(1));
@@ -208,6 +363,9 @@ public class GameEngine {
         return new Monster(selected.getName(), selected.getHp(), selected.getStrength(), selected.getDefense(), selected.getXpReward());
     }
 
+    /**
+     * Checks if the player finds random loot in the current room.
+     */
     private void checkLoot() {
         if (util.RandomUtil.randomDouble() < 0.3) {
             Item item = getRandomItem();
@@ -216,6 +374,10 @@ public class GameEngine {
         }
     }
 
+    /**
+     * Generates a random item from a weighted bag.
+     * @return a random Item
+     */
     private Item getRandomItem() {
         WeightedBag<Item> bag = new WeightedBag<>();
         
@@ -256,21 +418,26 @@ public class GameEngine {
         return bag.getRandom();
     }
 
+    /**
+     * Displays the player's character sheet, including stats, level, and XP.
+     */
     private void displayCharacterSheet() {
         Player p = gameState.getPlayer();
-        System.out.println("==============================");
-        System.out.println("  📜 CHARACTER SHEET");
-        System.out.println("==============================");
-        System.out.println("Name:     " + p.getName());
-        System.out.println("Level:    " + p.getLevel());
-        System.out.println("XP:       " + p.getXp() + "/" + (p.getLevel() * 100));
-        System.out.println("HP:       " + p.getHp() + "/" + p.getMaxHp());
-        System.out.println("Strength: " + p.getStrength());
-        System.out.println("Defense:  " + p.getDefense());
-        System.out.println("Magic:    " + p.getMagic());
-        System.out.println("Speed:    " + p.getSpeed());
+        ConsoleUI.printHeader("Character Sheet");
+        System.out.printf("  NAME: %-20s  LEVEL: %d\n", p.getName(), p.getLevel());
+        System.out.printf("  HP:   %d/%-18d  XP:    %d/%d\n", p.getHp(), p.getMaxHp(), p.getXp(), p.getLevel() * 100);
+        ConsoleUI.printDivider();
+        System.out.println("  STATS:");
+        System.out.printf("  Strength: %-10d  Defense: %-10d\n", p.getStrength(), p.getDefense());
+        System.out.printf("  Magic:    %-10d  Speed:   %-10d\n", p.getMagic(), p.getSpeed());
+        ConsoleUI.printDivider();
+        System.out.println("\n  [Press Enter to return]");
+        InputUtil.waitForEnter();
     }
 
+    /**
+     * Opens the inventory and allows the player to use an item.
+     */
     private void useItem() {
         Inventory inventory = gameState.getPlayer().getInventory();
         inventory.displayItems();

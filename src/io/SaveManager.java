@@ -5,9 +5,16 @@ import com.google.gson.GsonBuilder;
 import game.GameState;
 import java.io.*;
 
+/**
+ * Manages saving and loading the game state using JSON files.
+ */
 public class SaveManager {
     private static final String SAVE_FILE = "data/savegame.json";
 
+    /**
+     * Saves the current game state to a JSON file.
+     * @param gameState the game state to save
+     */
     public static void saveGame(GameState gameState) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter writer = new FileWriter(SAVE_FILE)) {
@@ -25,6 +32,12 @@ public class SaveManager {
         }
     }
 
+    /**
+     * Loads a game state from a save file.
+     * @param worldMap the world map to re-link rooms with
+     * @return the loaded GameState object
+     * @throws FileNotFoundException if the save file does not exist or is corrupted
+     */
     public static GameState loadGame(world.WorldMap worldMap) throws FileNotFoundException {
         Gson gson = new Gson();
         try (FileReader reader = new FileReader(SAVE_FILE)) {
@@ -39,6 +52,9 @@ public class SaveManager {
         }
     }
 
+    /**
+     * Data structure for mapping JSON save data.
+     */
     private static class SaveData {
         characters.Player player;
         String currentRoomId;

@@ -7,23 +7,42 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 
+/**
+ * Manages game settings such as difficulty and combat log visibility.
+ * Persists settings to a JSON file.
+ */
 public class SettingsManager {
     private static final Path SETTINGS_FILE_PATH = Paths.get("settings", "settings.json");
     private static String difficulty = "Medium";
     private static boolean showCombatLog = true;
 
+    /**
+     * Gets the path to the settings file.
+     * @return the settings file path
+     */
     public static Path getSettingsFilePath() {
         return SETTINGS_FILE_PATH;
     }
 
+    /**
+     * Gets the current difficulty setting.
+     * @return the difficulty string
+     */
     public static String getDifficulty() {
         return difficulty;
     }
 
+    /**
+     * Checks if the combat log should be shown.
+     * @return true if the combat log should be shown, false otherwise
+     */
     public static boolean isShowCombatLog() {
         return showCombatLog;
     }
 
+    /**
+     * Opens the settings menu and handles user choices.
+     */
     public static void setting() {
         System.out.println("\n");
         writeFile();
@@ -110,12 +129,19 @@ public class SettingsManager {
         }
     }
 
+    /**
+     * Resets the settings to their default values.
+     */
     public static void resetSettings() {
         difficulty = "Medium";
         showCombatLog = true;
         writeFile();
     }
 
+    /**
+     * Reads and displays the current settings from the file.
+     * @throws NullPointerException if a null reference is encountered during reading
+     */
     public static void readFile() throws NullPointerException {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(SETTINGS_FILE_PATH.toFile()))) {
             String line;
@@ -164,6 +190,10 @@ public class SettingsManager {
         }
     }
 
+    /**
+     * Writes the current settings to the JSON file.
+     * @throws NullPointerException if a null reference is encountered during writing
+     */
     public static void writeFile() throws NullPointerException {
 
         System.out.println("Writing to file...");

@@ -4,7 +4,12 @@ import exceptions.InvalidMenuChoiceException;
 import inventory.Inventory;
 import io.InputUtil;
 import items.Potion;
+import util.ConsoleUI;
 
+/**
+ * Represents the player character in the game.
+ * Manages stats, inventory, skills, and progression.
+ */
 public class Player {
     // Per-player stats (instance fields, not shared across players).
     private int hp = 100;
@@ -17,11 +22,57 @@ public class Player {
     private int xp = 0;
     private int level = 1;
     private Inventory inventory;
+    private java.util.List<Skill> skills;
+    private QuestLog questLog;
+    private items.Weapon equippedWeapon;
+    private String equippedArmor = "None"; // Simple string for now or a new Armor class
 
+    /**
+     * Constructs a new Player with default starting values and an empty inventory.
+     */
     public Player() {
         this.inventory = new Inventory();
+        this.skills = new java.util.ArrayList<>();
+        this.questLog = new QuestLog();
     }
 
+    /**
+     * Equips a weapon to the player.
+     * @param weapon the weapon to equip
+     */
+    public void equipWeapon(items.Weapon weapon) {
+        this.equippedWeapon = weapon;
+    }
+
+    /**
+     * Gets the currently equipped weapon.
+     * @return the equipped weapon
+     */
+    public items.Weapon getEquippedWeapon() {
+        return equippedWeapon;
+    }
+
+    /**
+     * Adds a new skill to the player's skill list.
+     * @param skill the skill to learn
+     */
+    public void learnSkill(Skill skill) {
+        skills.add(skill);
+    }
+
+    public java.util.List<Skill> getSkills() {
+        return skills;
+    }
+
+    public QuestLog getQuestLog() {
+        return questLog;
+    }
+
+    /**
+     * Initiates the player creation process, allowing the user to name their character and choose a class.
+     * @return a new Player instance with chosen stats
+     * @throws InvalidMenuChoiceException if an invalid class choice is made
+     */
     public static Player playerCreation() throws InvalidMenuChoiceException {
         // Create a fresh player instance to populate with input.
         Player player = new Player();
@@ -76,7 +127,11 @@ public class Player {
         System.out.println("\n" + "------------------------------");
 
         // Show the final player summary after creation.
-        System.out.println("Welcome to The Mist, " + player.name + "!" + "\n" + "HP" + player.hp + "/" + player.maxHp + "\n" + "Strength: " + player.strength + "\n" + "Defense: " + player.defense + "\n" + "Magic: " + player.magic + "\n" + "Speed: " + player.speed);
+        ConsoleUI.printHeader("Character Initialized");
+        ConsoleUI.printBox("Welcome to The Mist, " + player.name + "!\n" +
+                "HP: " + player.hp + "/" + player.maxHp + "\n" +
+                "STR: " + player.strength + " | DEF: " + player.defense + "\n" +
+                "MAG: " + player.magic + " | SPD: " + player.speed);
 
         return player;
     }
@@ -137,6 +192,14 @@ public class Player {
         this.defense = defense;
     }
 
+    public void setMagic(int magic) {
+        this.magic = magic;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
     public void setLevel(int level) {
         this.level = level;
     }
@@ -145,6 +208,10 @@ public class Player {
         this.xp = xp;
     }
 
+    /**
+     * Adds experience points to the player and checks for level up.
+     * @param amount the amount of XP to add
+     */
     public void addXp(int amount) {
         this.xp += amount;
         if (this.xp >= level * 100) {
@@ -152,6 +219,9 @@ public class Player {
         }
     }
 
+    /**
+     * Increases the player's level and boosts their stats.
+     */
     private void levelUp() {
         level++;
         xp = 0;
@@ -159,7 +229,9 @@ public class Player {
         hp = maxHp;
         strength += 2;
         defense += 2;
-        System.out.println("\nLEVEL UP! You are now level " + level);
-        System.out.println("HP: " + hp + " | STR: " + strength + " | DEF: " + defense);
+        ConsoleUI.printHeader("LEVEL UP!");
+        ConsoleUI.printBox("You are now level " + level + "!\n" +
+                "HP increased to " + maxHp + "\n" +
+                "Strength +2 | Defense +2");
     }
 }

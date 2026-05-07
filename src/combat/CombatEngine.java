@@ -8,6 +8,11 @@ import io.InputUtil;
 import items.Item;
 import items.Potion;
 
+import util.ConsoleUI;
+
+/**
+ * Manages the turn-based combat system between the player and monsters.
+ */
 public class CombatEngine {
     private Player player;
     private Monster monster;
@@ -15,19 +20,25 @@ public class CombatEngine {
     private boolean playerDefending;
     private boolean monsterDefending;
 
+    /**
+     * Constructs a new CombatEngine.
+     * @param player the player involved in combat
+     * @param monster the monster being fought
+     */
     public CombatEngine(Player player, Monster monster) {
         this.player = player;
         this.monster = monster;
         this.ai = new AIController();
     }
 
+    /**
+     * Starts the combat loop and handles the win/loss conditions.
+     */
     public void startCombat() {
-        System.out.println("==============================");
-        System.out.println("  ⚔ COMBAT: " + monster.getName());
+        ConsoleUI.printHeader("Combat: " + monster.getName());
         if (monster instanceof characters.Boss boss) {
-            System.out.println("  \"" + boss.getBossQuote() + "\"");
+            ConsoleUI.printBox("\"" + boss.getBossQuote() + "\"");
         }
-        System.out.println("==============================");
 
         while (!isCombatOver()) {
             playerDefending = false;
@@ -42,23 +53,34 @@ public class CombatEngine {
         }
 
         if (player.getHp() <= 0) {
-            System.out.println("You have been defeated...");
+            ConsoleUI.printBox("You have been defeated...");
         } else {
-            System.out.println("You defeated the " + monster.getName() + "!");
+            ConsoleUI.printBox("Victory! You defeated the " + monster.getName() + "!");
             System.out.println("Gained " + monster.getXpReward() + " XP!");
             player.addXp(monster.getXpReward());
         }
     }
 
+    /**
+     * Displays the current health of the player and monster, along with combat options.
+     */
     private void displayCombatStatus() {
-        System.out.println("\nYour HP:    " + player.getHp() + "/" + player.getMaxHp());
-        System.out.println("Enemy HP:   " + monster.getHp() + "/" + monster.getMaxHp());
-        System.out.println("\n1) Attack");
-        System.out.println("2) Defend");
-        System.out.println("3) Use Item");
-        System.out.println("4) Run");
+        ConsoleUI.printDivider();
+        System.out.println("  YOU: " + player.getHp() + "/" + player.getMaxHp() + " HP");
+        System.out.println("  FOE: " + monster.getHp() + "/" + monster.getMaxHp() + " HP");
+        ConsoleUI.printDivider();
+        System.out.println("""
+                1) Attack
+                2) Special Skills
+                3) Use Item
+                4) Defend
+                5) Try to Escape
+                """);
     }
 
+    /**
+     * Processes the player's turn, allowing them to choose an action.
+     */
     private void playerTurn() {
         boolean validChoice = false;
         while (!validChoice) {
@@ -71,20 +93,23 @@ public class CombatEngine {
                         validChoice = true;
                         break;
                     case 2:
-                        playerDefend();
-                        validChoice = true;
+                        validChoice = useSkill();
                         break;
                     case 3:
                         useItem();
                         validChoice = true;
                         break;
                     case 4:
+                        playerDefend();
+                        validChoice = true;
+                        break;
+                    case 5:
                         System.out.println("You ran away!");
                         monster.setHp(0); // Ends combat
                         validChoice = true;
                         break;
                     default:
-                        throw new InvalidMenuChoiceException("Combat Menu", 1, 4, choice);
+                        throw new InvalidMenuChoiceException("Combat Menu", 1, 5, choice);
                 }
             } catch (InvalidMenuChoiceException e) {
                 System.out.println(e.getMessage());
@@ -92,6 +117,58 @@ public class CombatEngine {
         }
     }
 
+    /**
+     * Displays available skills and allows the player to select one to use.
+     * @return true if a skill was used, false if canceled or no skills available
+     */
+    private boolean useSkill() {
+        java.util.List<characters.Skill> skills = player.getSkills();
+        if (skills.isEmpty()) {
+            System.out.println("You have no special skills yet.");
+            return false;
+        }
+
+        System.out.println("\n--- SPECIAL SKILLS ---");
+        for (int i = 0; i < skills.size(); i++) {
+            characters.Skill s = skills.get(i);
+            System.out.println((i + 1) + ") " + s.getName() + " (" + s.getDescription() + ")");
+        }
+        System.out.println("0) Back");
+
+        try {
+            int choice = InputUtil.getIntInput();
+            if (choice == 0) return false;
+            if (choice > 0 && choice <= skills.size()) {
+                characters.Skill selected = skills.get(choice - 1);
+                executeSkill(selected);
+                return true;
+            }
+        } catch (InvalidMenuChoiceException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Executes the effect of a chosen skill.
+     * @param skill the skill to execute
+     */
+    private void executeSkill(characters.Skill skill) {
+        ConsoleUI.printBox("You used " + skill.getName() + "!");
+        if ("DAMAGE".equals(skill.getType())) {
+            int damage = skill.getPower() + player.getMagic();
+            monster.setHp(monster.getHp() - damage);
+            System.out.println("It dealt " + damage + " magic damage!");
+        } else if ("HEAL".equals(skill.getType())) {
+            int heal = skill.getPower() + player.getMagic();
+            player.setHp(Math.min(player.getMaxHp(), player.getHp() + heal));
+            System.out.println("You restored " + heal + " HP!");
+        }
+    }
+
+    /**
+     * Calculates and applies damage from the player's attack to the monster.
+     */
     private void playerAttack() {
         int baseDamage = player.getStrength();
         
@@ -116,11 +193,17 @@ public class CombatEngine {
         System.out.println("You attacked the " + monster.getName() + " for " + damage + " damage!" + weaponMsg);
     }
 
+    /**
+     * Sets the player to a defending state, reducing incoming damage for one turn.
+     */
     private void playerDefend() {
         playerDefending = true;
         System.out.println("You brace yourself for an attack!");
     }
 
+    /**
+     * Executes the monster's turn using the AI controller.
+     */
     private void monsterTurn() {
         String action = ai.decideAction(monster, player);
         if (Action.ATTACK.equals(action)) {
@@ -134,10 +217,17 @@ public class CombatEngine {
         }
     }
 
+    /**
+     * Checks if either the player or the monster has been defeated.
+     * @return true if combat is over, false otherwise
+     */
     private boolean isCombatOver() {
         return player.getHp() <= 0 || monster.getHp() <= 0;
     }
 
+    /**
+     * Allows the player to use a potion from their inventory during combat.
+     */
     private void useItem() {
         Inventory inventory = player.getInventory();
         inventory.displayItems();
