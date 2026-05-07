@@ -1,0 +1,86 @@
+{
+  "player": {
+    "hp": 144,
+    "maxHp": 150,
+    "strength": 16,
+    "speed": 5,
+    "defense": 20,
+    "magic": 8,
+    "name": "bob",
+    "xp": 200,
+    "level": 3,
+    "inventory": {
+      "items": [
+        {
+          "name": "Health Potion",
+          "description": "Restores 30 HP",
+          "type": "POTION",
+          "value": 30
+        },
+        {
+          "name": "Health Potion",
+          "description": "Restores 30 HP",
+          "type": "POTION",
+          "value": 30
+        },
+        {
+          "attackBonus": 12,
+          "name": "Mace",
+          "description": "Simple but effective.",
+          "type": "WEAPON",
+          "value": 12
+        },
+        {
+          "attackBonus": 5,
+          "name": "Rusty Dagger",
+          "description": "A dull blade.",
+          "type": "WEAPON",
+          "value": 5
+        },
+        {
+          "name": "Health Potion",
+          "description": "Restores 40 HP",
+          "type": "POTION",
+          "value": 40
+        },
+        {
+          "name": "Antidote",
+          "description": "Restores 15 HP and clears toxins",
+          "type": "POTION",
+          "value": 15
+        },
+        {
+          "attackBonus": 4,
+          "name": "Club",
+          "description": "Better than nothing.",
+          "type": "WEAPON",
+          "value": 4
+        },
+        {
+          "name": "Mist Essence",
+          "description": "Restores 120 HP",
+          "type": "POTION",
+          "value": 120
+        }
+      ]
+    },
+    "skills": [
+      {
+        "name": "Mist Blast",
+        "description": "A blast of pure condensed mist.",
+        "power": 15,
+        "cost": 0,
+        "type": "DAMAGE"
+      }
+    ],
+    "questLog": {
+      "activeQuests": [
+        "Survive the Mist",
+        "Investigate the Whispers"
+      ],
+      "completedQuests": []
+    },
+    "equippedArmor": "None"
+  },
+  "currentRoomId": "R14"
+}
